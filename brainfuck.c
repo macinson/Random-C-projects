@@ -3,16 +3,16 @@
 
 int main(int argc, char *argv[])
 {
-    // if(argc < 2){ 
-    //     printf("Pass arguments bro!");
-    //     return 0;
-    // }
+    if(argc < 2){ 
+        printf("Pass arguments bro!");
+        return 0;
+    }
 
     char *tape = calloc(30000, 1);
     tape += 1000;
     int *stack = calloc(30000, 4);
     int pos = 0;
-    FILE *pF = fopen("brainfuckTesting.txt", "r");
+    FILE *pF = fopen(argv[1], "r");
     char buffer;
     while ((buffer = fgetc(pF)) != EOF)
     {
@@ -59,14 +59,21 @@ int main(int argc, char *argv[])
             stack-=4;
             if ((*tape) != 0)
             {
-                pos = (*stack)-1;  
+                pos = (*stack);  
 
-                fseek(pF, pos+1, SEEK_SET);
+                fseek(pF, pos, SEEK_SET);
+                pos--;
             }
-            break;            
+            break; 
+        case '\n':
+        case '\r':
+            pos++;           
         }
+        
         pos++;
     }
+    free(tape);
+    free(stack);
     fclose(pF);
     return 0;
 }
