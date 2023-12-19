@@ -8,14 +8,25 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    FILE *pF = fopen(argv[1], "r");
     char *tape = calloc(30000, 1);
     tape += 1000;
-    int *stack = calloc(30000, 4);
-    int pos = 0;
-    FILE *pF = fopen(argv[1], "r");
+    fseek(pF,0,SEEK_END);
+    char program[ftell(pF)+1];
+    program[ftell(pF)] = 0;
+    fseek(pF,0,SEEK_SET);
     char buffer;
-    while ((buffer = fgetc(pF)) != EOF)
+    int pos = 0;
+    while((buffer = fgetc(pF)) != EOF){
+        program[pos++] = buffer;
+    }
+    int *stack = calloc(30000, 4);
+    pos = 0;
+
+
+    while (pos < sizeof(program)-1)
     {
+        buffer = program[pos];
         switch (buffer)
         {
         case '+':
@@ -39,8 +50,9 @@ int main(int argc, char *argv[])
         case '[':
             if ((*tape) == 0)
             {
+                pos++;
                 int count = 0;
-                while ((buffer = fgetc(pF)) != ']' || count != 0)
+                while ((buffer = program[pos]) !=  ']' || count != 0)
                 {
                     if (buffer == ']')
                         count--;
@@ -60,14 +72,9 @@ int main(int argc, char *argv[])
             if ((*tape) != 0)
             {
                 pos = (*stack);  
-
-                fseek(pF, pos, SEEK_SET);
                 pos--;
             }
-            break; 
-        case '\n':
-        case '\r':
-            pos++;           
+            break;            
         }
         
         pos++;
