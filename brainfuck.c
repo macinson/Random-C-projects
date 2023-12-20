@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     }
 
     FILE *pF = fopen(argv[1], "r");
-    char *tape = calloc(30000, 1);
+    char *tape =(char*) calloc(30000, 1);
     tape += 1000;
     fseek(pF,0,SEEK_END);
     char program[ftell(pF)+1];
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     while((buffer = fgetc(pF)) != EOF){
         program[pos++] = buffer;
     }
-    int *stack = calloc(30000, 4);
+    int *stack = (int*)calloc(30000, 4);
     pos = 0;
 
 
