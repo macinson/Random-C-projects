@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
-float A = 0.5;
+float A = 0;
 int width =160;
 int height = 44;
 
-int calcX (int, int,int,int);
-int calcY (int, int,int,int);
+int calcX (float, float,float,float);
+int calcY (float, float,float,float);
 
-float ratioH = 0.25;
-float ratioW = 0.25;
+float ratioH = 0.4;
+float ratioW = 0.4;
 
 
 
@@ -28,21 +29,17 @@ int main(){
         }
     }
     while(1){
-        // for(int i = 0; i < height;i++){
-        //     for(int j = 0; j < width;j++){
-        //     buffer[calcY(i,j,width/2,height/2)][calcX(i,j,width/2,height/2)] = table[i][j];
-        //     }
-        // }
-
-        // for(int i = 0; i < height;i++){
-        //     for(int j = 0; j < width;j++){
-        //     table[i][j] = buffer[i][j];
-        //     }
-        // }
+        memset(buffer, ' ', width * height);
+        for(int i = 0; i < height;i++){
+            for(int j = 0; j < width;j++){
+            buffer[calcX(i,j,height/2,width/2)][calcY(i,j,height/2,width/2)] = table[i][j];
+            }
+        }
+        A += 0.1;
         printf("\x1b[H");
         for(int i = 0; i < height;i++){
             for(int j = 0; j < width;j++){
-                putchar((j != width-1) ? table[i][j] : '\n');
+                putchar((j != width-1) ? buffer[i][j] : '\n');
             }
         }
     }
@@ -51,10 +48,12 @@ int main(){
     return 0;
 }
 
-int calcX(int x, int y, int i, int j){
-    return (int)(x*sin(A) + y*cos(A) - j*cos(A) + i*(j-sin(A)));
+int calcX(float x, float y, float i, float j){
+    int r = (int)(x*cos(A) + y*sin(A) - j*sin(A) + i*(1-cos(A)));
+    return r;
 }
 
-int calcY(int x, int y, int i, int j){
-    return (int)(j*sin(A) +j+ x*cos(A) - y*sin(A) - i*cos(A));
+int calcY(float x, float y, float i, float j){
+    int r =  (int)(j + y*cos(A) - j*cos(A) - x*sin(A) + i * sin(A));
+    return r;
 }
